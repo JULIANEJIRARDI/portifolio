@@ -5,6 +5,8 @@ import meImage from "/me.jpg"
 export default function App() {
   const [activeSection, setActiveSection] = useState('home');
   const [scrollY, setScrollY] = useState(0);
+  const [projects, setProjects] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY);
@@ -12,40 +14,37 @@ export default function App() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const projects = [
-    {
-      id: 1,
-      title: 'E-Commerce Platform',
-      description: 'Plataforma de e-commerce moderna com React e Vite',
-      image: 'https://via.placeholder.com/300x200?text=E-Commerce',
-      tags: ['React', 'Vite', 'CSS'],
-      link: '#'
-    },
-    {
-      id: 2,
-      title: 'Task Manager App',
-      description: 'Aplicativo de gerenciamento de tarefas com localStorage',
-      image: 'https://via.placeholder.com/300x200?text=Task+Manager',
-      tags: ['React', 'JavaScript', 'CSS'],
-      link: '#'
-    },
-    {
-      id: 3,
-      title: 'Weather Dashboard',
-      description: 'Dashboard de clima em tempo real com API integrada',
-      image: 'https://via.placeholder.com/300x200?text=Weather',
-      tags: ['React', 'API', 'Vite'],
-      link: '#'
-    },
-    {
-      id: 4,
-      title: 'Portfolio Website',
-      description: 'Site portfólio responsivo com animações CSS',
-      image: 'https://via.placeholder.com/300x200?text=Portfolio',
-      tags: ['React', 'Design', 'CSS'],
-      link: '#'
-    }
-  ];
+  // Fetch repositórios do GitHub
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const response = await fetch('https://api.github.com/users/JULIANEJIRARDI/repos?sort=updated&per_page=6');
+        const repos = await response.json();
+        
+        // Formatar os dados dos repositórios
+        const formattedProjects = repos
+          .filter(repo => !repo.fork) // Filtrar apenas repositórios próprios
+          .map((repo) => ({
+            id: repo.id,
+            title: repo.name.charAt(0).toUpperCase() + repo.name.slice(1).replace(/-/g, ' '),
+            description: repo.description || 'Sem descrição disponível',
+            image: `https://raw.githubusercontent.com/JULIANEJIRARDI/${repo.name}/main/screenshot.png` || 'https://via.placeholder.com/300x200?text=' + repo.name,
+            tags: repo.topics && repo.topics.length > 0 ? repo.topics : ['GitHub', 'Projeto'],
+            link: repo.html_url,
+            stars: repo.stargazers_count,
+            language: repo.language || 'JavaScript'
+          }));
+        
+        setProjects(formattedProjects);
+        setLoading(false);
+      } catch (error) {
+        console.error('Erro ao buscar repositórios:', error);
+        setLoading(false);
+      }
+    };
+
+    fetchProjects();
+  }, []);
 
   const skills = [
     { category: 'Frontend', items: ['React', 'JavaScript', 'HTML5', 'CSS3'] },
@@ -54,6 +53,12 @@ export default function App() {
     { category: 'Soft Skills', items: ['Criatividade', 'Comunicação', 'Colaboração', 'Resolução de Problemas'] }
   ];
 
+  const handleScrollToSection = (sectionId) => {
+    setActiveSection(sectionId);
+    const element = document.getElementById(sectionId);
+    element?.scrollIntoView({ behavior: 'smooth' });
+  };
+
   return (
     <div className="app">
       {/* Navigation */}
@@ -61,11 +66,11 @@ export default function App() {
         <div className="nav-container">
           <div className="logo">JM</div>
           <ul className="nav-menu">
-            <li><a href="#home" onClick={() => setActiveSection('home')} className={activeSection === 'home' ? 'active' : ''}>Home</a></li>
-            <li><a href="#about" onClick={() => setActiveSection('about')} className={activeSection === 'about' ? 'active' : ''}>Sobre</a></li>
-            <li><a href="#projects" onClick={() => setActiveSection('projects')} className={activeSection === 'projects' ? 'active' : ''}>Projetos</a></li>
-            <li><a href="#skills" onClick={() => setActiveSection('skills')} className={activeSection === 'skills' ? 'active' : ''}>Habilidades</a></li>
-            <li><a href="#contact" onClick={() => setActiveSection('contact')} className={activeSection === 'contact' ? 'active' : ''}>Contato</a></li>
+            <li><a href="#home" onClick={() => handleScrollToSection('home')} className={activeSection === 'home' ? 'active' : ''}>Home</a></li>
+            <li><a href="#about" onClick={() => handleScrollToSection('about')} className={activeSection === 'about' ? 'active' : ''}>Sobre</a></li>
+            <li><a href="#projects" onClick={() => handleScrollToSection('projects')} className={activeSection === 'projects' ? 'active' : ''}>Projetos</a></li>
+            <li><a href="#skills" onClick={() => handleScrollToSection('skills')} className={activeSection === 'skills' ? 'active' : ''}>Habilidades</a></li>
+            <li><a href="#contact" onClick={() => handleScrollToSection('contact')} className={activeSection === 'contact' ? 'active' : ''}>Contato</a></li>
           </ul>
         </div>
       </nav>
@@ -82,8 +87,8 @@ export default function App() {
             Criando experiências digitais incríveis com React, JavaScript e Design criativo.
           </p>
           <div className="hero-buttons">
-            <button className="btn btn-primary">Ver Meus Projetos</button>
-            <button className="btn btn-secondary">Entrar em Contato</button>
+            <button className="btn btn-primary" onClick={() => handleScrollToSection('projects')}>Ver Meus Projetos</button>
+            <button className="btn btn-secondary" onClick={() => handleScrollToSection('contact')}>Entrar em Contato</button>
           </div>
         </div>
         <div className="hero-decoration"></div>
@@ -95,7 +100,7 @@ export default function App() {
           <h2 className="section-title">Sobre Mim</h2>
           <div className="about-content">
             <div className="about-image">
-              <img src="https://via.placeholder.com/400x400?text=About+Photo" alt="Juliane" />
+              <img src={meImage} alt="Juliane" />
             </div>
             <div className="about-text">
               <p>
@@ -112,7 +117,7 @@ export default function App() {
               </p>
               <div className="about-stats">
                 <div className="stat">
-                  <span className="stat-number">50+</span>
+                  <span className="stat-number">{projects.length}+</span>
                   <span className="stat-label">Projetos</span>
                 </div>
                 <div className="stat">
@@ -133,27 +138,48 @@ export default function App() {
       <section id="projects" className="projects">
         <div className="container">
           <h2 className="section-title">Meus Projetos</h2>
-          <div className="projects-grid">
-            {projects.map((project) => (
-              <div key={project.id} className="project-card">
-                <div className="project-image">
-                  <img src={project.image} alt={project.title} />
-                  <div className="project-overlay">
-                    <a href={project.link} className="project-link">Ver Detalhes →</a>
+          {loading ? (
+            <div className="loading-spinner">
+              <div className="spinner"></div>
+              <p>Carregando projetos...</p>
+            </div>
+          ) : projects.length > 0 ? (
+            <div className="projects-grid">
+              {projects.map((project) => (
+                <div key={project.id} className="project-card">
+                  <div className="project-image">
+                    <img 
+                      src={project.image} 
+                      alt={project.title}
+                      onError={(e) => {
+                        e.target.src = `https://via.placeholder.com/300x200?text=${encodeURIComponent(project.title)}`;
+                      }}
+                    />
+                    <div className="project-overlay">
+                      <a href={project.link} target="_blank" rel="noopener noreferrer" className="project-link">
+                        Ver no GitHub →
+                      </a>
+                    </div>
+                  </div>
+                  <div className="project-content">
+                    <h3>{project.title}</h3>
+                    <p>{project.description}</p>
+                    <div className="project-meta">
+                      <span className="project-language">💻 {project.language}</span>
+                      <span className="project-stars">⭐ {project.stars}</span>
+                    </div>
+                    <div className="project-tags">
+                      {project.tags.slice(0, 3).map((tag, index) => (
+                        <span key={index} className="tag">{tag}</span>
+                      ))}
+                    </div>
                   </div>
                 </div>
-                <div className="project-content">
-                  <h3>{project.title}</h3>
-                  <p>{project.description}</p>
-                  <div className="project-tags">
-                    {project.tags.map((tag, index) => (
-                      <span key={index} className="tag">{tag}</span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          ) : (
+            <p className="no-projects">Nenhum projeto encontrado. Visite meu GitHub para mais informações.</p>
+          )}
         </div>
       </section>
 
@@ -192,14 +218,14 @@ export default function App() {
                 <div className="contact-icon">📧</div>
                 <div>
                   <h4>Email</h4>
-                  <p>juliane@example.com</p>
+                  <p><a href="mailto:seu.email@gmail.com">seu.email@gmail.com</a></p>
                 </div>
               </div>
               <div className="contact-item">
                 <div className="contact-icon">📱</div>
                 <div>
                   <h4>Telefone</h4>
-                  <p>+55 (11) 99999-9999</p>
+                  <p><a href="tel:+5511999999999">+55 (11) 99999-9999</a></p>
                 </div>
               </div>
               <div className="contact-item">
@@ -210,7 +236,7 @@ export default function App() {
                 </div>
               </div>
             </div>
-            <form className="contact-form">
+            <form className="contact-form" onSubmit={(e) => { e.preventDefault(); alert('Função de envio não implementada'); }}>
               <input type="text" placeholder="Seu Nome" required />
               <input type="email" placeholder="Seu Email" required />
               <textarea placeholder="Sua Mensagem" rows="6" required></textarea>
@@ -219,7 +245,7 @@ export default function App() {
           </div>
         </div>
         <div className="social-links">
-          <a href="#" className="social-link">GitHub</a>
+          <a href="https://github.com/JULIANEJIRARDI" target="_blank" rel="noopener noreferrer" className="social-link">GitHub</a>
           <a href="#" className="social-link">LinkedIn</a>
           <a href="#" className="social-link">Instagram</a>
           <a href="#" className="social-link">Twitter</a>
