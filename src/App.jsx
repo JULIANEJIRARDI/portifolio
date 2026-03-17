@@ -1,121 +1,235 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import React, { useState, useEffect } from 'react';
+import './app.css';
+import meImage from "/me.jpg"
 
-function App() {
-  const [count, setCount] = useState(0)
+export default function App() {
+  const [activeSection, setActiveSection] = useState('home');
+  const [scrollY, setScrollY] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => setScrollY(window.scrollY);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const projects = [
+    {
+      id: 1,
+      title: 'E-Commerce Platform',
+      description: 'Plataforma de e-commerce moderna com React e Vite',
+      image: 'https://via.placeholder.com/300x200?text=E-Commerce',
+      tags: ['React', 'Vite', 'CSS'],
+      link: '#'
+    },
+    {
+      id: 2,
+      title: 'Task Manager App',
+      description: 'Aplicativo de gerenciamento de tarefas com localStorage',
+      image: 'https://via.placeholder.com/300x200?text=Task+Manager',
+      tags: ['React', 'JavaScript', 'CSS'],
+      link: '#'
+    },
+    {
+      id: 3,
+      title: 'Weather Dashboard',
+      description: 'Dashboard de clima em tempo real com API integrada',
+      image: 'https://via.placeholder.com/300x200?text=Weather',
+      tags: ['React', 'API', 'Vite'],
+      link: '#'
+    },
+    {
+      id: 4,
+      title: 'Portfolio Website',
+      description: 'Site portfólio responsivo com animações CSS',
+      image: 'https://via.placeholder.com/300x200?text=Portfolio',
+      tags: ['React', 'Design', 'CSS'],
+      link: '#'
+    }
+  ];
+
+  const skills = [
+    { category: 'Frontend', items: ['React', 'JavaScript', 'HTML5', 'CSS3'] },
+    { category: 'Design', items: ['UI/UX', 'Figma', 'Adobe XD', 'Prototyping'] },
+    { category: 'Tools', items: ['Vite', 'Git', 'VS Code', 'npm'] },
+    { category: 'Soft Skills', items: ['Criatividade', 'Comunicação', 'Colaboração', 'Resolução de Problemas'] }
+  ];
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
+    <div className="app">
+      {/* Navigation */}
+      <nav className="navbar">
+        <div className="nav-container">
+          <div className="logo">JM</div>
+          <ul className="nav-menu">
+            <li><a href="#home" onClick={() => setActiveSection('home')} className={activeSection === 'home' ? 'active' : ''}>Home</a></li>
+            <li><a href="#about" onClick={() => setActiveSection('about')} className={activeSection === 'about' ? 'active' : ''}>Sobre</a></li>
+            <li><a href="#projects" onClick={() => setActiveSection('projects')} className={activeSection === 'projects' ? 'active' : ''}>Projetos</a></li>
+            <li><a href="#skills" onClick={() => setActiveSection('skills')} className={activeSection === 'skills' ? 'active' : ''}>Habilidades</a></li>
+            <li><a href="#contact" onClick={() => setActiveSection('contact')} className={activeSection === 'contact' ? 'active' : ''}>Contato</a></li>
+          </ul>
         </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
+      </nav>
+
+      {/* Hero Section */}
+      <section id="home" className="hero">
+        <div className="hero-content" style={{ transform: `translateY(${scrollY * 0.5}px)` }}>
+          <div className="hero-avatar">
+            <img src={meImage} alt="Juliane Martins" />
+          </div>
+          <h1 className="hero-title">Juliane Martins</h1>
+          <p className="hero-subtitle">Designer & Frontend Developer</p>
+          <p className="hero-description">
+            Criando experiências digitais incríveis com React, JavaScript e Design criativo.
           </p>
+          <div className="hero-buttons">
+            <button className="btn btn-primary">Ver Meus Projetos</button>
+            <button className="btn btn-secondary">Entrar em Contato</button>
+          </div>
         </div>
-        <button
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
+        <div className="hero-decoration"></div>
       </section>
 
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
+      {/* About Section */}
+      <section id="about" className="about">
+        <div className="container">
+          <h2 className="section-title">Sobre Mim</h2>
+          <div className="about-content">
+            <div className="about-image">
+              <img src="https://via.placeholder.com/400x400?text=About+Photo" alt="Juliane" />
+            </div>
+            <div className="about-text">
+              <p>
+                Olá! Sou Juliane Martins, uma Designer e Desenvolvedora Frontend apaixonada por criar interfaces 
+                bonitas e funcionais. Com experiência em React e JavaScript, construo aplicações web modernas e responsivas.
+              </p>
+              <p>
+                Minha jornada começou com Design, e descobri a paixão por programação ao perceber que 
+                design e código andam juntos para criar experiências extraordinárias.
+              </p>
+              <p>
+                Quando não estou codificando, adoro explorar novas tendências de design, contribuir em projetos 
+                open-source e aprender novas tecnologias.
+              </p>
+              <div className="about-stats">
+                <div className="stat">
+                  <span className="stat-number">50+</span>
+                  <span className="stat-label">Projetos</span>
+                </div>
+                <div className="stat">
+                  <span className="stat-number">100%</span>
+                  <span className="stat-label">Dedicação</span>
+                </div>
+                <div className="stat">
+                  <span className="stat-number">5+</span>
+                  <span className="stat-label">Anos Exp.</span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+      {/* Projects Section */}
+      <section id="projects" className="projects">
+        <div className="container">
+          <h2 className="section-title">Meus Projetos</h2>
+          <div className="projects-grid">
+            {projects.map((project) => (
+              <div key={project.id} className="project-card">
+                <div className="project-image">
+                  <img src={project.image} alt={project.title} />
+                  <div className="project-overlay">
+                    <a href={project.link} className="project-link">Ver Detalhes →</a>
+                  </div>
+                </div>
+                <div className="project-content">
+                  <h3>{project.title}</h3>
+                  <p>{project.description}</p>
+                  <div className="project-tags">
+                    {project.tags.map((tag, index) => (
+                      <span key={index} className="tag">{tag}</span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Skills Section */}
+      <section id="skills" className="skills">
+        <div className="container">
+          <h2 className="section-title">Habilidades</h2>
+          <div className="skills-grid">
+            {skills.map((skillGroup, index) => (
+              <div key={index} className="skill-category">
+                <h3>{skillGroup.category}</h3>
+                <div className="skill-items">
+                  {skillGroup.items.map((skill, idx) => (
+                    <div key={idx} className="skill-item">
+                      <span className="skill-dot"></span>
+                      {skill}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Contact Section */}
+      <section id="contact" className="contact">
+        <div className="container">
+          <h2 className="section-title">Vamos Conversar?</h2>
+          <p className="contact-subtitle">
+            Estou aberto a novas oportunidades e projetos interessantes.
+          </p>
+          <div className="contact-content">
+            <div className="contact-info">
+              <div className="contact-item">
+                <div className="contact-icon">📧</div>
+                <div>
+                  <h4>Email</h4>
+                  <p>juliane@example.com</p>
+                </div>
+              </div>
+              <div className="contact-item">
+                <div className="contact-icon">📱</div>
+                <div>
+                  <h4>Telefone</h4>
+                  <p>+55 (11) 99999-9999</p>
+                </div>
+              </div>
+              <div className="contact-item">
+                <div className="contact-icon">📍</div>
+                <div>
+                  <h4>Localização</h4>
+                  <p>São Paulo, Brasil</p>
+                </div>
+              </div>
+            </div>
+            <form className="contact-form">
+              <input type="text" placeholder="Seu Nome" required />
+              <input type="email" placeholder="Seu Email" required />
+              <textarea placeholder="Sua Mensagem" rows="6" required></textarea>
+              <button type="submit" className="btn btn-primary">Enviar Mensagem</button>
+            </form>
+          </div>
+        </div>
+        <div className="social-links">
+          <a href="#" className="social-link">GitHub</a>
+          <a href="#" className="social-link">LinkedIn</a>
+          <a href="#" className="social-link">Instagram</a>
+          <a href="#" className="social-link">Twitter</a>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="footer">
+        <p>&copy; 2024 Juliane Martins. Todos os direitos reservados.</p>
+      </footer>
+    </div>
+  );
 }
-
-export default App
