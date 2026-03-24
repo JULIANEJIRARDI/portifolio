@@ -108,8 +108,8 @@ export default function App() {
                 bonitas e funcionais. Com experiência em React e JavaScript, construo aplicações web modernas e responsivas.
               </p>
               <p>
-                Minha jornada começou com Design, e descobri a paixão por programação ao perceber que 
-                design e código andam juntos para criar experiências extraordinárias.
+                Minha jornada começou com Design, não sou a maior fã de programação porém ao perceber que 
+                design e código andam juntos para criar experiências extraordinárias o meu interesse passou a ser maior. Ainda sim, mantenho minha visao de que sou completa e absolutamente de humanas.
               </p>
               <p>
                 Quando não estou codificando, adoro explorar novas tendências de design, contribuir em projetos 
@@ -121,11 +121,11 @@ export default function App() {
                   <span className="stat-label">Projetos</span>
                 </div>
                 <div className="stat">
-                  <span className="stat-number">100%</span>
+                  <span className="stat-number">80%</span>
                   <span className="stat-label">Dedicação</span>
                 </div>
                 <div className="stat">
-                  <span className="stat-number">5+</span>
+                  <span className="stat-number">1+</span>
                   <span className="stat-label">Anos Exp.</span>
                 </div>
               </div>
@@ -218,14 +218,14 @@ export default function App() {
                 <div className="contact-icon">📧</div>
                 <div>
                   <h4>Email</h4>
-                  <p><a href="mailto:seu.email@gmail.com">seu.email@gmail.com</a></p>
+                  <p><a href="julianejirardi@gmail.com">seu.email@gmail.com</a></p>
                 </div>
               </div>
               <div className="contact-item">
                 <div className="contact-icon">📱</div>
                 <div>
                   <h4>Telefone</h4>
-                  <p><a href="tel:+5511999999999">+55 (11) 99999-9999</a></p>
+                  <p><a href="tel:+5511987635241">+55 (11) 99999-9999</a></p>
                 </div>
               </div>
               <div className="contact-item">
